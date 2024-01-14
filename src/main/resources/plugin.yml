@@ -1,0 +1,240 @@
+name: Jobs
+description: Jobs plugin for the BukkitAPI
+main: com.gamingmesh.jobs.Jobs
+version: ${project.version}
+api-version: "1.13"
+folia-supported: true
+website: https://www.spigotmc.org/resources/4216/
+authors: [Zrips]
+contributors: [montlikadani]
+depend: [CMILib]
+softdepend: [Vault, Essentials, MythicMobs, WorldGuard, MyPet, PlaceholderAPI, EcoEnchants, WildStacker, StackMob]
+commands:
+  jobs:
+    description: Jobs
+    usage: /jobs
+
+permissions:
+  jobs.*:
+    description: Grants access to all Jobs commands
+    children:
+      jobs.admin: true
+      jobs.autojoin.*: true
+  jobs.autojoin.*:
+    default: false
+  jobs.admin:
+    description: Grants permissions as an admin
+    default: false
+    children:
+      jobs.use: true
+      jobs.command.*: true
+  jobs.use:
+    description: Grants ability to use this plugin
+    default: true
+  jobs.command.admin.*:
+    description: Grants player access to all commands
+    default: false
+    children:
+      jobs.command.*: true
+      jobs.command.admin.stats: true
+      jobs.command.admin.archive: true
+      jobs.command.admin.quests.stop: true
+      jobs.command.admin.quests.start: true
+  jobs.command.*:
+    description: Grants player access to all commands
+    default: false
+    children:
+      jobs.command.archive: true
+      jobs.command.browse: true
+      jobs.command.join: true
+      jobs.command.leave: true
+      jobs.command.leaveall: true
+      jobs.command.log: true
+      jobs.command.info: true
+      jobs.command.playerinfo: true
+      jobs.command.fire: true
+      jobs.command.fireall: true
+      jobs.command.employ: true
+      jobs.command.bonus: true
+      jobs.command.edititembonus: true
+      jobs.command.promote: true
+      jobs.command.points: true
+      jobs.command.quests: true
+      jobs.command.demote: true
+      jobs.command.grantxp: true
+      jobs.command.removexp: true
+      jobs.command.transfer: true
+      jobs.command.reload: true
+      jobs.command.top: true
+      jobs.command.gtop: true
+      jobs.command.toggle: true
+      jobs.command.limit: true
+      jobs.command.give: true
+      jobs.command.signs: true
+      jobs.command.shop: true
+      jobs.command.stats: true
+      jobs.command.fixnames: true
+      jobs.command.signupdate: true
+      jobs.command.moneyboost: true
+      jobs.command.exp: true
+      jobs.command.level: true
+      jobs.command.clearownership: true
+      jobs.command.expboost: true
+      jobs.command.iteminfo: true
+      jobs.command.itembonus: true
+      jobs.command.blockinfo: true
+      jobs.command.skipquest: true
+      jobs.command.schedule: true
+  jobs.command.browse:
+    description: Grants access to the browse command
+    default: true
+  jobs.command.skipquest:
+    description: Grants access to the skipquest command
+    default: true
+  jobs.command.top:
+    description: Grants access to the top command
+    default: true
+  jobs.command.gtop:
+    description: Grants access to the gtop command
+    default: true
+  jobs.command.stats:
+    description: Grants access to the stats command
+    default: true
+  jobs.command.archive:
+    description: Grants access to the archive command
+    default: true
+  jobs.command.admin.archive:
+    description: Grants access to the archive command on other players
+    default: true
+  jobs.command.admin.stats:
+    description: Grants access to the stats command on other players
+    default: true
+  jobs.command.join:
+    description: Grants access to the join command
+    default: true
+  jobs.command.leave:
+    description: Grants access to the leave command
+    default: true
+  jobs.command.leaveall:
+    description: Grants access to the leaveall command
+    default: true
+  jobs.command.info:
+    description: Grants access to the info command
+    default: true
+  jobs.command.playerinfo:
+    description: Grants access to the playerinfo command
+    default: op
+  jobs.command.fire:
+    description: Grants access to the fire command
+    default: op
+  jobs.command.fireall:
+    description: Grants access to the fireall command
+    default: op
+  jobs.command.employ:
+    description: Grants access to the employ command
+    default: op
+  jobs.command.promote:
+    description: Grants access to the promote command
+    default: op
+  jobs.command.demote:
+    description: Grants access to the demote command
+    default: op
+  jobs.command.grantxp:
+    description: Grants access to the grantxp command
+    default: op
+  jobs.command.removexp:
+    description: Grants access to the removexp command
+    default: op
+  jobs.command.transfer:
+    description: Grants access to the transfer command
+    default: op
+  jobs.command.reload:
+    description: Grants access to the reload command
+    default: op
+  jobs.command.signupdate:
+    description: Grants access to the reload command
+    default: op
+  jobs.command.give:
+    description: Grants access to the give command
+    default: op
+  jobs.command.expboost:
+    description: Grants access to the expboost command
+    default: op
+  jobs.command.moneyboost:
+    description: Grants access to the moneyboost command
+    default: op
+  jobs.command.toggle:
+    description: Grants access to the toggle command
+    default: true
+  jobs.command.limit:
+    description: Grants access to the limit command
+    default: true
+  jobs.command.fixnames:
+    description: Grants access to the fixnames command
+    default: true
+  jobs.command.log:
+    description: Grants access to the log command
+    default: true
+  jobs.command.shop:
+    description: Grants access to the shop command
+    default: true
+  jobs.command.log.others:
+    description: Grants access to the log command
+    default: op
+  jobs.command.glog:
+    description: Grants access to the glog command
+    default: op
+  jobs.command.bonus:
+    description: Grants access to the bonus command
+    default: true
+  jobs.command.points:
+    description: Grants access to the points command
+    default: true
+  jobs.command.blockinfo:
+    description: Grants access to the blockinfo command
+    default: true
+  jobs.command.iteminfo:
+    description: Grants access to the iteminfo command
+    default: true
+  jobs.command.exp:
+    description: Grants access to the exp command
+    default: op
+  jobs.command.level:
+    description: Grants access to the level command
+    default: op
+  jobs.command.quests:
+    description: Grants access to the quests command
+    default: true
+  jobs.command.clearownership:
+    description: Grants access to the clearownership command
+    default: true
+  jobs.command.ownedblocks:
+    description: Grants access to the ownedblocks command
+    default: true
+  jobs.command.admin.ownedblocks:
+    description: Grants access to the ownedblocks command
+    default: op
+  jobs.command.admin.clearownership:
+    description: Grants access to the ownedblocks command
+    default: op    
+  jobs.command.itembonus:
+    description: Grants access to the itembonus command
+    default: true
+  jobs.command.edititembonus:
+    description: Grants access to the edititembonus command
+    default: op
+  jobs.command.schedule:
+    description: Grants access to the schedule command
+    default: op
+  jobs.area.add:
+    description: Grants access to the area add command
+    default: op
+  jobs.area.remove:
+    description: Grants access to the area remove command
+    default: op
+  jobs.hidetop.*:
+    description: Prevent player to be shown in all job top
+    default: false
+  jobs.hidegtop:
+    description: Prevent player to be shown in the global jobs top
+    default: false

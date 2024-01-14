@@ -1,0 +1,9 @@
+/bin/
+/target/
+/.idea/
+/jobs.iml
+.settings
+src/main/resources/locale/messages_en.yml
+.classpath
+.project
+/build/
