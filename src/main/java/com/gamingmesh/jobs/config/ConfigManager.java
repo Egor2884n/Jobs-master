@@ -1104,6 +1104,23 @@ public class ConfigManager {
             }
             job.setMaxExpEquation(maxExpEquation);
 
+            Parser skillexpEquation = new Parser("0");
+            String skillexpEquationInput = jobSection.getString("skillsexp-progression-equation");
+            if (skillexpEquationInput != null) {
+                try {
+                    skillexpEquation = new Parser(skillexpEquationInput);
+                    // test equation
+                    skillexpEquation.setVariable("numjobs", 1);
+                    skillexpEquation.setVariable("maxjobs", 2);
+                    skillexpEquation.setVariable("joblevel", 1);
+                    skillexpEquation.setVariable("baseskillsexp", 1);
+                } catch (ParseError e) {
+                    log.warning("Job " + jobConfigName + " has an invalid skillsexp-progression-equation property. Skipping job!");
+                    continue;
+                }
+            }
+            job.setSkillExpEquation(skillexpEquation);
+
             Parser incomeEquation = new Parser("0");
             String incomeEquationInput = jobSection.getString("income-progression-equation");
             if (incomeEquationInput != null) {
@@ -1512,7 +1529,7 @@ public class ConfigManager {
                             }
 
                             KeyValues keyValue = null;
-                            String[] sep = mat.split(";", 4);
+                            String[] sep = mat.split(";", 5);
                             if (sep.length >= 1) {
                                 keyValue = getKeyValue(sep[0], actionType, jobConfigName);
                             }
@@ -1553,7 +1570,16 @@ public class ConfigManager {
                                 }
                             }
 
-                            jobInfo.add(new JobInfo(actionType, id, meta, type + subType, income, incomeEquation, experience, expEquation, pointsEquation, points, 1,
+                            double skillexp = 0D;
+                            if (sep.length >= 5) {
+                                try {
+                                    skillexp = Double.parseDouble(sep[4]);
+                                    skillexp = updateValue(CurrencyType.SKILLS_EXP, skillexp);
+                                } catch (NumberFormatException e) {
+                                }
+                            }
+
+                            jobInfo.add(new JobInfo(actionType, id, meta, type + subType, income, skillexp, incomeEquation, skillexpEquation, experience, expEquation, pointsEquation, points, 1,
                                 -1, typeSection.getCurrentPath(), null, null, null));
                         }
                         job.setJobInfo(actionType, jobInfo);
@@ -1584,6 +1610,8 @@ public class ConfigManager {
                         points = updateValue(CurrencyType.POINTS, points);
                         double experience = section.getDouble("experience");
                         experience = updateValue(CurrencyType.EXP, experience);
+                        double skillexp = section.getDouble("skillexp");
+                        skillexp = updateValue(CurrencyType.SKILLS_EXP, skillexp);
 
                         int fromlevel = section.getInt("from-level", 1);
 
@@ -1607,7 +1635,7 @@ public class ConfigManager {
                         if (section.isInt("softPointsLimit"))
                             itemSoftPointsLimit = section.getInt("softPointsLimit");
 
-                        jobInfo.add(new JobInfo(actionType, id, meta, type + subType, income, incomeEquation, experience, expEquation, pointsEquation, points, fromlevel,
+                        jobInfo.add(new JobInfo(actionType, id, meta, type + subType, income, skillexp, incomeEquation, skillexpEquation, experience, expEquation, pointsEquation, points, fromlevel,
                             untilLevel, section.getCurrentPath(), itemSoftIncomeLimit, itemSoftExpLimit, itemSoftPointsLimit));
                     }
                 }

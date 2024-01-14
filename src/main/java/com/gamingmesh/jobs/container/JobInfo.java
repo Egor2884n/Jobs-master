@@ -29,27 +29,29 @@ public class JobInfo {
     private int id;
     private String meta;
     private String name;
-    private double baseIncome, baseXp, basePoints;
-    private Parser moneyEquation, xpEquation, pointsEquation;
+    private double baseIncome, baseXp, basePoints, baseSkillExp;
+    private Parser moneyEquation, xpEquation, pointsEquation, skillexpEquation;
     private int fromLevel = 0;
     private int untilLevel = Integer.MAX_VALUE;
 
     private String configPath = "";
     private Integer softIncomeLevelLimit, softExpLevelLimit, softPointsLevelLimit;
 
-    public JobInfo(ActionType actionType, int id, String meta, String name, double baseIncome, Parser moneyEquation, double baseXp, Parser xpEquation,
+    public JobInfo(ActionType actionType, int id, String meta, String name, double baseIncome, double baseSkillExp, Parser moneyEquation, Parser skillexpEquation, double baseXp, Parser xpEquation,
         Parser pointsEquation, double basePoints, int fromLevel, int untilLevel, String configPath) {
-        this(actionType, id, meta, name, baseIncome, moneyEquation, baseXp, xpEquation, pointsEquation, basePoints, fromLevel, untilLevel, configPath, null, null, null);
+        this(actionType, id, meta, name, baseIncome, baseSkillExp, moneyEquation, skillexpEquation, baseXp, xpEquation, pointsEquation, basePoints, fromLevel, untilLevel, configPath, null, null, null);
     }
 
-    public JobInfo(ActionType actionType, int id, String meta, String name, double baseIncome, Parser moneyEquation, double baseXp, Parser xpEquation,
+    public JobInfo(ActionType actionType, int id, String meta, String name, double baseIncome, double baseSkillExp, Parser moneyEquation, Parser skillexpEquation, double baseXp, Parser xpEquation,
         Parser pointsEquation, double basePoints, int fromLevel, int untilLevel, String configPath, Integer softIncomeLevelLimit, Integer softExpLevelLimit, Integer softPointsLevelLimit) {
         this.actionType = actionType;
         this.id = id;
         this.meta = meta;
         this.name = name;
         this.baseIncome = baseIncome;
+        this.baseSkillExp = baseSkillExp;
         this.moneyEquation = moneyEquation;
+        this.skillexpEquation = skillexpEquation;
         this.pointsEquation = pointsEquation;
         this.basePoints = basePoints;
         this.baseXp = baseXp;
@@ -102,6 +104,10 @@ public class JobInfo {
         return baseIncome;
     }
 
+    public double getBaseSkillExp() {
+        return baseSkillExp;
+    }
+
     public double getBaseXp() {
         return baseXp;
     }
@@ -120,6 +126,16 @@ public class JobInfo {
         moneyEquation.setVariable("maxjobs", maxJobs);
         moneyEquation.setVariable("baseincome", baseIncome);
         return moneyEquation.getValue();
+    }
+
+    public double getSkillsExp(double level, int numjobs, int maxJobs) {
+        if (baseSkillExp == 0 || !CurrencyType.SKILLS_EXP.isEnabled())
+            return 0;
+        skillexpEquation.setVariable("joblevel", level);
+        skillexpEquation.setVariable("numjobs", numjobs);
+        skillexpEquation.setVariable("maxjobs", maxJobs);
+        skillexpEquation.setVariable("baseskillsexp", baseSkillExp);
+        return skillexpEquation.getValue();
     }
 
     public double getExperience(double level, int numjobs, int maxJobs) {
@@ -152,6 +168,10 @@ public class JobInfo {
 
     public void setBaseIncome(double baseIncome) {
         this.baseIncome = baseIncome;
+    }
+
+    public void setBaseSkillExp(double baseSkillExp) {
+        this.baseSkillExp = baseSkillExp;
     }
 
     public void setBaseXp(double baseXp) {

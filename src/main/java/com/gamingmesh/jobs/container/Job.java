@@ -91,7 +91,7 @@ public class Job {
     private BoostMultiplier boost = new BoostMultiplier();
     private String bossbar;
 
-    private Parser moneyEquation, xpEquation, pointsEquation;
+    private Parser moneyEquation, xpEquation, pointsEquation, skillexpEquation;
 
     private final List<String> fDescription = new ArrayList<>(), maxLevelCommands = new ArrayList<>();
     private List<String> worldBlacklist = new ArrayList<>();
@@ -609,8 +609,16 @@ public class Job {
         return moneyEquation;
     }
 
+    public Parser getSkillExpEquation() {
+        return skillexpEquation;
+    }
+
     public void setMoneyEquation(Parser moneyEquation) {
         this.moneyEquation = moneyEquation;
+    }
+
+    public void setSkillExpEquation(Parser skillexpEquation) {
+        this.skillexpEquation = skillexpEquation;
     }
 
     public Parser getXpEquation() {

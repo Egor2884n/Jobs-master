@@ -254,6 +254,10 @@ public class editjobs implements Cmd {
                     sType = "points";
                     jInfo.setBasePoints(value);
                     break;
+                case SKILLS_EXP:
+                    sType = "skillexp";
+                    jInfo.setBaseSkillExp(value);
+                    break;
                 default:
                     break;
                 }
@@ -372,12 +376,13 @@ public class editjobs implements Cmd {
 
                 double income = 0D,
                     points = 0D,
-                    experience = 0D;
+                    experience = 0D,
+                    skillexp = 0D;
 
                 int fromlevel = 1;
                 int untilLevel = -1;
 
-                JobInfo jInfo = new JobInfo(actionT, id, meta, type + subType, income, job.getMoneyEquation(), experience, job.getXpEquation(), job.getPointsEquation(), points, fromlevel,
+                JobInfo jInfo = new JobInfo(actionT, id, meta, type + subType, income, skillexp, job.getMoneyEquation(), job.getSkillExpEquation(), experience, job.getXpEquation(), job.getPointsEquation(), points, fromlevel,
                     untilLevel, job.getName() + "/" + actionT.getName() + "/" + (type + subType).replace(":", "-"));
 
                 for (JobInfo info : job.getJobInfo(actionT)) {
@@ -393,6 +398,7 @@ public class editjobs implements Cmd {
                 Jobs.getConfigManager().changeJobsSettings(args[1], jInfo.getConfigPath() + "/income", 0);
                 Jobs.getConfigManager().changeJobsSettings(args[1], jInfo.getConfigPath() + "/points", 0);
                 Jobs.getConfigManager().changeJobsSettings(args[1], jInfo.getConfigPath() + "/experience", 0);
+                Jobs.getConfigManager().changeJobsSettings(args[1], jInfo.getConfigPath() + "/skillexp", 0);
 
                 Util.getJobsEditorMap().remove(player.getUniqueId());
                 return true;

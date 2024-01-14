@@ -15,6 +15,7 @@ public final class JobsPrePaymentEvent extends BaseEvent implements Cancellable 
     private OfflinePlayer offlinePlayer;
     private double money;
     private double points;
+    private double skillexp;
     private Job job;
     private Block block;
     private Entity entity;
@@ -23,19 +24,21 @@ public final class JobsPrePaymentEvent extends BaseEvent implements Cancellable 
     private boolean cancelled = false;
 
     @Deprecated
-    public JobsPrePaymentEvent(OfflinePlayer offlinePlayer, Job job, double money, double points) {
+    public JobsPrePaymentEvent(OfflinePlayer offlinePlayer, Job job, double money, double points, double skillexp) {
 	this.job = job;
 	this.offlinePlayer = offlinePlayer;
 	this.money = money;
 	this.points = points;
+	this.skillexp = skillexp;
     }
 
-    public JobsPrePaymentEvent(OfflinePlayer offlinePlayer, Job job, double money, double points, Block block,
+    public JobsPrePaymentEvent(OfflinePlayer offlinePlayer, Job job, double money, double points, double skillexp, Block block,
 	Entity entity, LivingEntity living, ActionInfo info) {
 	this.job = job;
 	this.offlinePlayer = offlinePlayer;
 	this.money = money;
 	this.points = points;
+    this.skillexp = skillexp;
 	this.block = block;
 	this.entity = entity;
 	this.living = living;
@@ -58,6 +61,10 @@ public final class JobsPrePaymentEvent extends BaseEvent implements Cancellable 
      */
     public double getAmount() {
 	return money;
+    }
+
+    public double getSkillExp() {
+        return skillexp;
     }
 
     /**

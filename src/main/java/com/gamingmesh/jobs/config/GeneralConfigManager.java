@@ -786,6 +786,28 @@ public class GeneralConfigManager {
         limit.setAnnouncementDelay(c.get("Economy.Limit.Point.AnnouncementDelay", 30));
         currencyLimitUse.put(CurrencyType.POINTS, limit);
 
+        // Skills limit
+        limit = new CurrencyLimit();
+        try {
+            Parser equation = new Parser(c.get("Economy.Limit.Skills.Limit", "500+500*(totallevel/100)"));
+            equation.setVariable("totallevel", 1);
+            limit.setMaxEquation(equation);
+        } catch (Throwable e) {
+            Jobs.getPluginLogger().warning("PointLimit has an invalid value. Disabling money limit!");
+            limit.setEnabled(false);
+        }
+        c.addComment("Economy.Limit.Skills.TimeLimit", "Time in seconds: 60 = 1 min, 3600 = 1 hour, 86400 = 24 hours");
+        limit.setTimeLimit(c.get("Economy.Limit.Skills.TimeLimit", 3600));
+
+        c.addComment("Economy.Limit.Skills.ResetTime", "Time in 24 hour format when limit should reset. This will override TimeLimit if defined",
+                "Example: '00:00:00' will reset timer at midnight, '04:30:00' will reset at 4:30 in the morning", "Set to empty field if you want to use TimeLimit");
+        limit.setResetsAt(c.get("Economy.Limit.Skills.ResetTime", ""));
+
+        c.addComment("Economy.Limit.Skills.AnnouncementDelay", "Delay between announcements about reached limit",
+                "Keep this from 30 to 5 min (300), as players can get annoyed of constant message displaying");
+        limit.setAnnouncementDelay(c.get("Economy.Limit.Skills.AnnouncementDelay", 30));
+        currencyLimitUse.put(CurrencyType.SKILLS_EXP, limit);
+
         // Exp limit
         limit = new CurrencyLimit();
         list = new ArrayList<>();

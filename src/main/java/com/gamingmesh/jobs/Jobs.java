@@ -1042,6 +1042,7 @@ public final class Jobs extends JavaPlugin {
 
             double income = jobinfo.getIncome(1, numjobs, jPlayer.maxJobsEquation);
             double pointAmount = jobinfo.getPoints(1, numjobs, jPlayer.maxJobsEquation);
+            double skillExp = jobinfo.getSkillsExp(1, numjobs, jPlayer.maxJobsEquation);
 
             if (income == 0D && pointAmount == 0D)
                 return;
@@ -1049,7 +1050,7 @@ public final class Jobs extends JavaPlugin {
             Boost boost = getPlayerManager().getFinalBonus(jPlayer, noneJob);
 
             JobsPrePaymentEvent jobsPrePaymentEvent = new JobsPrePaymentEvent(jPlayer.getPlayer(), noneJob, income,
-                pointAmount, block, ent, victim, info);
+                pointAmount, skillExp, block, ent, victim, info);
             Bukkit.getServer().getPluginManager().callEvent(jobsPrePaymentEvent);
             // If event is canceled, don't do anything
             if (jobsPrePaymentEvent.isCancelled()) {
@@ -1116,8 +1117,10 @@ public final class Jobs extends JavaPlugin {
                 payments.put(CurrencyType.MONEY, income);
             if (pointAmount != 0D)
                 payments.put(CurrencyType.POINTS, pointAmount);
+            if (skillExp != 0D)
+                payments.put(CurrencyType.SKILLS_EXP, skillExp);
 
-            economy.pay(jPlayer, payments);
+            economy.pay(jPlayer, payments, noneJob.getJobFullName());
 
             if (gConfigManager.LoggingUse) {
                 Map<CurrencyType, Double> amounts = new HashMap<>();
@@ -1144,6 +1147,7 @@ public final class Jobs extends JavaPlugin {
                 }
 
                 double income = jobinfo.getIncome(prog.getLevel(), numjobs, jPlayer.maxJobsEquation);
+                double skillExp = jobinfo.getSkillsExp(prog.getLevel(), numjobs, jPlayer.maxJobsEquation);
                 double pointAmount = jobinfo.getPoints(prog.getLevel(), numjobs, jPlayer.maxJobsEquation);
                 double expAmount = jobinfo.getExperience(prog.getLevel(), numjobs, jPlayer.maxJobsEquation);
 
@@ -1180,7 +1184,7 @@ public final class Jobs extends JavaPlugin {
                 Boost boost = getPlayerManager().getFinalBonus(jPlayer, prog.getJob(), ent, victim);
 
                 JobsPrePaymentEvent jobsPrePaymentEvent = new JobsPrePaymentEvent(jPlayer.getPlayer(), prog.getJob(), income,
-                    pointAmount, block, ent, victim, info);
+                    pointAmount, skillExp, block, ent, victim, info);
 
                 Bukkit.getServer().getPluginManager().callEvent(jobsPrePaymentEvent);
                 // If event is canceled, don't do anything
@@ -1292,11 +1296,13 @@ public final class Jobs extends JavaPlugin {
                     payments.put(CurrencyType.POINTS, pointAmount);
                 if (expAmount != 0D)
                     payments.put(CurrencyType.EXP, expAmount);
+                if (skillExp != 0D)
+                    payments.put(CurrencyType.SKILLS_EXP, skillExp);
 
-                FASTPAYMENT.put(jPlayer.getUniqueId(), new FastPayment(jPlayer, info, new BufferedPayment(jPlayer.getPlayer(), payments), prog
+                FASTPAYMENT.put(jPlayer.getUniqueId(), new FastPayment(jPlayer, info, new BufferedPayment(jPlayer.getPlayer(), payments, prog.getJob().getJobFullName()), prog
                     .getJob()));
 
-                economy.pay(jPlayer, payments);
+                economy.pay(jPlayer, payments, prog.getJob().getJobFullName());
                 int oldLevel = prog.getLevel();
 
                 if (gConfigManager.LoggingUse) {
@@ -1311,7 +1317,6 @@ public final class Jobs extends JavaPlugin {
                     getPlayerManager().performLevelUp(jPlayer, prog.getJob(), oldLevel);
             }
 
-            //need to update bp
             if (block != null) {
                 BlockProtection bp = getBpManager().getBp(block.getLocation());
                 if (bp != null)
@@ -1444,7 +1449,7 @@ public final class Jobs extends JavaPlugin {
         double expPayment = payment.get(CurrencyType.EXP);
 
         JobsPrePaymentEvent jobsPrePaymentEvent = new JobsPrePaymentEvent(jPlayer.getPlayer(), job, payment.get(CurrencyType.MONEY),
-            payment.get(CurrencyType.POINTS), block, ent, victim, info);
+            payment.get(CurrencyType.POINTS), payment.get(CurrencyType.SKILLS_EXP), block, ent, victim, info);
         Bukkit.getServer().getPluginManager().callEvent(jobsPrePaymentEvent);
         // If event is canceled, don't do anything
         if (jobsPrePaymentEvent.isCancelled())
@@ -1460,6 +1465,7 @@ public final class Jobs extends JavaPlugin {
             return;
 
         payment.set(CurrencyType.EXP, jobsExpGainEvent.getExp());
+        payment.set(CurrencyType.SKILLS_EXP, jobsPrePaymentEvent.getSkillExp());
 
         boolean limited = true;
         for (CurrencyType one : CurrencyType.values()) {
@@ -1472,7 +1478,7 @@ public final class Jobs extends JavaPlugin {
         if (limited)
             return;
 
-        economy.pay(jPlayer, payment.getPayment());
+        economy.pay(jPlayer, payment.getPayment(), job.getJobFullName());
 
         JobProgression prog = jPlayer.getJobProgression(job);
         int oldLevel = prog.getLevel();

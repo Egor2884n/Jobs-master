@@ -68,8 +68,8 @@ public class BufferedEconomy {
      * @param player - player to be paid
      * @param payments the payments map that contains currency type and amount
      */
-    public void pay(JobsPlayer player, Map<CurrencyType, Double> payments) {
-        pay(new BufferedPayment(player.getPlayer(), payments));
+    public void pay(JobsPlayer player, Map<CurrencyType, Double> payments, String jobName) {
+        pay(new BufferedPayment(player.getPlayer(), payments, jobName));
     }
 
     /**
@@ -216,9 +216,9 @@ public class BufferedEconomy {
                     }
 
                     if (Jobs.getGCManager().isEconomyAsync())
-                        CMIScheduler.get().runLaterAsync(new BufferedPaymentTask(this, economy, payment), i);
+                        CMIScheduler.get().runLaterAsync(new BufferedPaymentTask(this, economy, payment, plugin), i);
                     else
-                        CMIScheduler.get().runTaskLater(new BufferedPaymentTask(this, economy, payment), i);
+                        CMIScheduler.get().runTaskLater(new BufferedPaymentTask(this, economy, payment, plugin), i);
 
                     // Show players payment stuff
                     showPayment(payment);
