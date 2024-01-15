@@ -26,6 +26,7 @@ import com.gamingmesh.jobs.economy.Economy;
 
 import net.Zrips.CMILib.Version.Schedulers.CMIScheduler;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 
 public class BufferedPaymentTask implements Runnable {
 
@@ -67,7 +68,14 @@ public class BufferedPaymentTask implements Runnable {
                     case "§e§lИсследователь": skill = "endurance"; break;
                     case "§e§lЗачарователь": skill = "enchanting"; break;
                     case "§e§lАлхимик": skill = "alchemy"; break;
-                    case "§e§lЛучник": skill = "archery"; break;
+                    case "§e§lОхотник": {
+                        Material material = Bukkit.getPlayer(payment.getOfflinePlayer().getName()).getInventory().getItemInMainHand().getType();
+                        if (material == Material.BOW || material == Material.CROSSBOW) {
+                            skill = "archery";
+                        } else {
+                            skill = "fighting";
+                        } break;
+                    }
                     case "§e§lСельхоз": skill = "excavation"; break;
                     case "§e§lРыбак": skill = "fishing"; break;
                     case "§e§lШахтёр": skill = "mining"; break;
